@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PPDB Antartika",
+  title: "Admin SPMB Antartika",
   description: "Sistem Pendaftaran Peserta Didik Baru",
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({
           referrerPolicy="no-referrer"
         />
       </head>
-      <body>{children}</body>
+      <body className="scrollbar-none">{children}</body>
     </html>
   );
 }

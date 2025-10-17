@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { comparePassword, generateToken } from '@/lib/auth';
 import { RowDataPacket } from 'mysql2';
+// import { console } from 'inspector';
 
 export async function POST(request: NextRequest) {
   try {

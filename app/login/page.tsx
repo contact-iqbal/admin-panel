@@ -42,7 +42,7 @@ export default function LoginPage() {
     <div className="wrapper min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-700">
       <div className="login-box">
         <div className="login-logo">
-          <b>PPDB</b> Antartika
+          <b>SPMB</b> Antartika
         </div>
         <div className="login-card-body">
           <p className="text-center mb-4">Masuk untuk memulai sesi Anda</p>
@@ -86,7 +86,7 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center mt-3 text-gray-600 text-sm">
-            Admin Panel PPDB Antartika
+            Admin Panel SPMB Antartika
           </p>
         </div>
       </div>

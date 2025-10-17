@@ -40,7 +40,7 @@ export default function ChatPage() {
       {
         phone: '6281234567890',
         name: 'Budi Santoso',
-        lastMessage: 'Bagaimana cara daftar PPDB?',
+        lastMessage: 'Bagaimana cara daftar SPMB?',
         lastMessageTime: new Date(),
         unreadCount: 2,
       },
@@ -62,7 +62,7 @@ export default function ChatPage() {
       {
         id: 1,
         from: phone,
-        message: 'Halo, saya ingin bertanya tentang PPDB',
+        message: 'Halo, saya ingin bertanya tentang SPMB',
         timestamp: new Date(Date.now() - 7200000),
         is_from_me: false,
       },
@@ -77,7 +77,7 @@ export default function ChatPage() {
       {
         id: 3,
         from: phone,
-        message: 'Bagaimana cara daftar PPDB?',
+        message: 'Bagaimana cara daftar SPMB?',
         timestamp: new Date(Date.now() - 3600000),
         is_from_me: false,
       },

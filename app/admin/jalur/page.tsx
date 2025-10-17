@@ -42,6 +42,7 @@ export default function KelolaJalur() {
 
       const response = await axios.get('/api/admin/jalur', config);
       setJalurList(response.data.data || []);
+      console.log(response.data.data)
     } catch (error) {
       console.error('Error fetching jalur:', error);
     } finally {
@@ -102,6 +103,7 @@ export default function KelolaJalur() {
       status: jalur.status,
     });
     setShowForm(true);
+    window.location.href='#'
   };
 
   const handleDelete = async (id: number) => {
@@ -163,7 +165,7 @@ export default function KelolaJalur() {
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Kelola Jalur PPDB</h1>
+            <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Kelola Jalur SPMB</h1>
             <p className="text-gray-600 dark:text-gray-400">Manajemen jalur pendaftaran</p>
           </div>
           <button
@@ -275,7 +277,7 @@ export default function KelolaJalur() {
       )}
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 md:p-6">
-        <h2 className="text-xl font-bold mb-4 dark:text-white">Daftar Jalur PPDB</h2>
+        <h2 className="text-xl font-bold mb-4 dark:text-white">Daftar Jalur SPMB</h2>
         <div className="space-y-4">
           {jalurList.map((jalur) => (
             <div
@@ -287,13 +289,13 @@ export default function KelolaJalur() {
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
                     <h3 className="text-lg font-bold dark:text-white">{jalur.nama}</h3>
                     <span
-                      className={`px-3 py-1 rounded text-sm font-medium self-start ${
-                        jalur.status === 'active'
+                      className={`px-3 py-1 rounded text-sm font-medium self-start uppercase ${
+                        jalur.status === 'aktif'
                           ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
                           : 'bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200'
                       }`}
                     >
-                      {jalur.status === 'active' ? 'Aktif' : 'Tidak Aktif'}
+                      {jalur.status === 'aktif' ? 'aktif' : 'Tidak Aktif'}
                     </span>
                   </div>
                   <p className="text-gray-600 dark:text-gray-400 mb-3">{jalur.deskripsi || '-'}</p>
@@ -341,7 +343,7 @@ export default function KelolaJalur() {
           ))}
           {jalurList.length === 0 && (
             <div className="text-center p-8 text-gray-500 dark:text-gray-400">
-              Belum ada jalur PPDB. Klik tombol &quot;Tambah Jalur&quot; untuk membuat jalur baru.
+              Belum ada jalur SPMB. Klik tombol &quot;Tambah Jalur&quot; untuk membuat jalur baru.
             </div>
           )}
         </div>

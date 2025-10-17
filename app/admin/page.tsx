@@ -52,7 +52,7 @@ export default function AdminDashboard() {
     <DashboardLayout>
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2 dark:text-white">Dashboard Overview</h1>
-        <p className="text-gray-600 dark:text-gray-400">Selamat datang di Admin Panel PPDB Antartika</p>
+        <p className="text-gray-600 dark:text-gray-400">Selamat datang di Admin Panel SPMB Antartika</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
                     return 'bg-green-100 text-green-800 border-green-200';
                   case 'expired':
                     return 'bg-gray-100 text-gray-800 border-gray-200';
-                  case 'cancelled':
+                  case 'failed':
                     return 'bg-red-100 text-red-800 border-red-200';
                   default:
                     return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -178,14 +178,14 @@ export default function AdminDashboard() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer border-l-4 border-blue-500">
             <i className="fas fa-users text-3xl mb-2 text-blue-500"></i>
             <h3 className="text-lg font-bold mb-1 dark:text-white">Kelola Peserta</h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">Manajemen data peserta PPDB</p>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">Manajemen data peserta SPMB</p>
           </div>
         </Link>
 
         <Link href="/admin/jalur">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer border-l-4 border-green-500">
             <i className="fas fa-route text-3xl mb-2 text-green-500"></i>
-            <h3 className="text-lg font-bold mb-1 dark:text-white">Jalur PPDB</h3>
+            <h3 className="text-lg font-bold mb-1 dark:text-white">Jalur SPMB</h3>
             <p className="text-gray-600 dark:text-gray-400 text-sm">Atur jalur pendaftaran</p>
           </div>
         </Link>

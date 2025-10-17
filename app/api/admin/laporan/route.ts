@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     const [totalUsersResult] = await pool.query(
-      "SELECT COUNT(*) as count FROM users WHERE role = 'user'"
+      "SELECT COUNT(*) as count FROM users WHERE role = 'default'"
     );
 
     const [totalBerkasResult] = await pool.query(

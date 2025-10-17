@@ -140,7 +140,7 @@ export default function Laporan() {
     <DashboardLayout>
       <div className="mb-4 md:mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Laporan & Statistik</h1>
-        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Data statistik dan laporan PPDB</p>
+        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Data statistik dan laporan SPMB</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
@@ -181,7 +181,7 @@ export default function Laporan() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 md:mb-8">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 md:p-6 mb-6 md:mb-8">
         <h2 className="text-lg md:text-xl font-bold mb-3 md:mb-4 dark:text-white">Pendaftar per Jalur</h2>
         <div className="h-64 md:h-80">
           <Bar
@@ -221,7 +221,7 @@ export default function Laporan() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 md:p-6">
         <h2 className="text-lg md:text-xl font-bold mb-3 md:mb-4 dark:text-white">Export Data</h2>
         <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4">
           Download data dalam format CSV untuk analisis lebih lanjut

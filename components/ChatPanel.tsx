@@ -47,7 +47,7 @@ export default function ChatPanel() {
       const randomMessage: Message = {
         id: Date.now(),
         from: '6281234567890',
-        message: 'Halo, saya ingin bertanya tentang PPDB',
+        message: 'Halo, saya ingin bertanya tentang SPMB',
         timestamp: new Date(),
         is_from_me: false,
       };

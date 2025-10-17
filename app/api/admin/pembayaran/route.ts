@@ -14,12 +14,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
+    // const [pembayaran] = await pool.query(`
+    //   SELECT
+    //     p.*,
+    //     u.email,
+    //     d.nama_lengkap,
+    //     j.nama as jalur_nama
+    //   FROM pembayaran p
+    //   JOIN users u ON p.user_id = u.id
+    //   LEFT JOIN data_diri d ON p.user_id = d.user_id
+    //   LEFT JOIN jalur j ON p.jalur_id = j.id
+    //   ORDER BY p.created_at DESC
+    // `);
     const [pembayaran] = await pool.query(`
       SELECT
         p.*,
         u.email,
-        d.nama_lengkap,
-        j.nama as jalur_nama
+        COALESCE(NULLIF(d.nama_lengkap, ''), u.nama) AS nama_lengkap,
+        j.nama AS jalur_nama
       FROM pembayaran p
       JOIN users u ON p.user_id = u.id
       LEFT JOIN data_diri d ON p.user_id = d.user_id

@@ -40,6 +40,7 @@ export async function PATCH(
       penghasilan_ortu,
       tahun_lulus,
     } = body;
+    const dateOnly = body.tanggal_lahir.split('T')[0];
 
     await pool.query<ResultSetHeader>(
       `UPDATE data_diri SET
@@ -52,7 +53,7 @@ export async function PATCH(
         nisn,
         nik,
         tempat_lahir,
-        tanggal_lahir,
+        dateOnly,
         jenis_kelamin,
         alamat,
         asal_sekolah,

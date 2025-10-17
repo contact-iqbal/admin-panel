@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 
     const [users] = await pool.query<RowDataPacket[]>(
       `SELECT u.id, u.email, u.role, u.created_at,
-              d.nama_lengkap, d.nisn, d.asal_sekolah,
+              COALESCE(NULLIF(d.nama_lengkap, ''), u.nama) AS nama_lengkap, COALESCE(NULLIF(d.nisn, ''), u.nisn) AS nisn, COALESCE(NULLIF(d.asal_sekolah, ''), 'Kosong') AS asal_sekolah,
               (SELECT COUNT(*) FROM berkas WHERE user_id = u.id) as total_berkas,
               (SELECT COUNT(*) FROM pembayaran WHERE user_id = u.id AND status = 'paid') as total_pembayaran,
               (SELECT nomor_peserta FROM kartu WHERE user_id = u.id) as nomor_peserta
@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
        LEFT JOIN data_diri d ON u.id = d.user_id
        ORDER BY u.created_at DESC`
     );
+    
 
     return NextResponse.json({ data: users }, { status: 200 });
   } catch (error) {

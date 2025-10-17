@@ -69,7 +69,7 @@ export default function KelolaA() {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Kelola Peserta PPDB</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Kelola Peserta SPMB</h1>
         <p className="text-gray-600 dark:text-gray-400">Manajemen data peserta pendaftaran</p>
       </div>
 

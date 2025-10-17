@@ -121,18 +121,18 @@ export default function UserDetailPage() {
 
   return (
     <DashboardLayout>
-      <div className="mb-6">
+      <div className="mb-6 dark:text-white">
         <button
-          onClick={() => router.push('/admin')}
+          onClick={() => router.push('/admin/peserta/')}
           className="text-blue-600 hover:underline mb-4"
         >
-          &larr; Kembali ke Dashboard
+          &larr; Kembali 
         </button>
         <h1 className="text-3xl font-bold">Detail Peserta</h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Data Akun</h2>
           </div>
@@ -153,7 +153,7 @@ export default function UserDetailPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Data Diri</h2>
             <button
@@ -174,21 +174,21 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, nama_lengkap: e.target.value })
                   }
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="text"
                   placeholder="NISN"
                   value={formData.nisn || ''}
                   onChange={(e) => setFormData({ ...formData, nisn: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="text"
                   placeholder="NIK"
                   value={formData.nik || ''}
                   onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="text"
@@ -197,7 +197,7 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, tempat_lahir: e.target.value })
                   }
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="date"
@@ -205,14 +205,14 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, tanggal_lahir: e.target.value })
                   }
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white dark:scheme-dark"
                 />
                 <select
                   value={formData.jenis_kelamin || ''}
                   onChange={(e) =>
                     setFormData({ ...formData, jenis_kelamin: e.target.value })
                   }
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 >
                   <option value="">Pilih Jenis Kelamin</option>
                   <option value="L">Laki-laki</option>
@@ -222,7 +222,7 @@ export default function UserDetailPage() {
                   placeholder="Alamat"
                   value={formData.alamat || ''}
                   onChange={(e) => setFormData({ ...formData, alamat: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                   rows={3}
                 />
                 <input
@@ -232,7 +232,7 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, asal_sekolah: e.target.value })
                   }
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="number"
@@ -241,7 +241,7 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, tahun_lulus: e.target.value })
                   }
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 />
                 <button
                   onClick={handleSaveDataDiri}
@@ -291,7 +291,7 @@ export default function UserDetailPage() {
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold mb-4">Berkas</h2>
           {data.berkas.length > 0 ? (
             <div className="space-y-3">
@@ -336,7 +336,7 @@ export default function UserDetailPage() {
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold mb-4">Pembayaran</h2>
           {data.pembayaran.length > 0 ? (
             <div className="space-y-3">

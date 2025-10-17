@@ -59,7 +59,7 @@ export default function KelolaPembayaran() {
         return 'bg-green-100 text-green-800';
       case 'expired':
         return 'bg-gray-100 text-gray-800';
-      case 'cancelled':
+      case 'failed':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-yellow-100 text-yellow-800';
@@ -72,8 +72,8 @@ export default function KelolaPembayaran() {
         return 'Lunas';
       case 'expired':
         return 'Expired';
-      case 'cancelled':
-        return 'Dibatalkan';
+      case 'failed':
+        return 'Gagal';
       default:
         return 'Pending';
     }
@@ -88,7 +88,7 @@ export default function KelolaPembayaran() {
 
   const totalAmount = filteredPembayaran
     .filter((p) => p.status === 'paid')
-    .reduce((sum, p) => sum + p.amount, 0);
+    .reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
   if (loading) {
     return (
@@ -104,7 +104,7 @@ export default function KelolaPembayaran() {
     <DashboardLayout>
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Kelola Pembayaran</h1>
-        <p className="text-gray-600 dark:text-gray-400">Monitoring pembayaran peserta PPDB</p>
+        <p className="text-gray-600 dark:text-gray-400">Monitoring pembayaran peserta SPMB</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-6">
@@ -154,7 +154,7 @@ export default function KelolaPembayaran() {
             <option value="paid">Lunas</option>
             <option value="pending">Pending</option>
             <option value="expired">Expired</option>
-            <option value="cancelled">Dibatalkan</option>
+            <option value="failed">Dibatalkan</option>
           </select>
         </div>
 
@@ -183,7 +183,7 @@ export default function KelolaPembayaran() {
                   </td>
                   <td className="p-3 text-center">
                     <span
-                      className={`inline-block px-3 py-1 rounded text-sm font-medium ${getStatusBadge(
+                      className={`inline-block px-3 py-1 rounded text-sm font-medium uppercase ${getStatusBadge(
                         pembayaran.status
                       )}`}
                     >

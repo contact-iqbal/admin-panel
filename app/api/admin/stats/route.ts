@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     }
 
     const [totalUsers] = await pool.query<RowDataPacket[]>(
-      'SELECT COUNT(*) as count FROM users WHERE role = "user"'
+      'SELECT COUNT(*) as count FROM users WHERE role = "default"'
     );
 
     const [totalBerkas] = await pool.query<RowDataPacket[]>(

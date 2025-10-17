@@ -45,7 +45,7 @@ export default function KelolaBerkas() {
   const updateBerkasStatus = async (id: number, status: string) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(
+      await axios.patch(
         `/api/admin/berkas/${id}`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }

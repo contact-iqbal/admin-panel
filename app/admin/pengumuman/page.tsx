@@ -180,7 +180,7 @@ export default function PengumumanPage() {
               <i className="fa-solid fa-users text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Lulus</p>
@@ -189,7 +189,7 @@ export default function PengumumanPage() {
               <i className="fa-solid fa-check-circle text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Tidak Lulus</p>
@@ -198,7 +198,7 @@ export default function PengumumanPage() {
               <i className="fa-solid fa-times-circle text-3xl text-gray-400 dark:text-gray-500"></i>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Pending</p>

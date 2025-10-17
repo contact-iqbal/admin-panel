@@ -2,6 +2,7 @@
 
 import DashboardLayout from '@/components/DashboardLayout';
 import { useEffect, useState, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
 
 interface ConsoleLog {
   id: number;
@@ -19,59 +20,145 @@ export default function ConsolePage() {
   const logsEndRef = useRef<HTMLDivElement>(null);
   const logsContainerRef = useRef<HTMLDivElement>(null);
 
+  // useEffect(() => {
+  //   const sampleLogs: Omit<ConsoleLog, 'id' | 'timestamp'>[] = [
+  //     { level: 'info', message: 'Server started on port 3000', source: 'System' },
+  //     { level: 'success', message: 'Database connected successfully', source: 'Database' },
+  //     { level: 'info', message: 'User login: admin@antartika.sch.id', source: 'Auth' },
+  //     { level: 'warn', message: 'High memory usage detected: 85%', source: 'System' },
+  //     { level: 'info', message: 'New registration: John Doe', source: 'SPMB' },
+  //     { level: 'success', message: 'Payment verified for user ID 1234', source: 'Payment' },
+  //     { level: 'error', message: 'Failed to upload document: timeout', source: 'Upload' },
+  //     { level: 'debug', message: 'API request to /api/admin/users took 142ms', source: 'API' },
+  //     { level: 'info', message: 'Document verification completed', source: 'Document' },
+  //     { level: 'warn', message: 'Disk space running low: 15% remaining', source: 'System' },
+  //   ];
+
+  //   const initialLogs: ConsoleLog[] = sampleLogs.map((log, index) => ({
+  //     ...log,
+  //     id: index,
+  //     timestamp: new Date(Date.now() - (sampleLogs.length - index) * 10000),
+  //   }));
+
+  //   setLogs(initialLogs);
+
+  //   if (!isPaused) {
+  //     const interval = setInterval(() => {
+  //       const newLog: ConsoleLog = {
+  //         id: Date.now(),
+  //         timestamp: new Date(),
+  //         level: ['info', 'warn', 'error', 'success', 'debug'][
+  //           Math.floor(Math.random() * 5)
+  //         ] as ConsoleLog['level'],
+  //         message: [
+  //           'Database query executed',
+  //           'User session updated',
+  //           'Cache cleared',
+  //           'Backup completed',
+  //           'Email sent successfully',
+  //           'File processing in progress',
+  //           'Configuration reloaded',
+  //           'Authentication token refreshed',
+  //           'API rate limit reached',
+  //           'Background job started',
+  //         ][Math.floor(Math.random() * 10)],
+  //         source: ['System', 'Database', 'Auth', 'SPMB', 'Payment', 'Upload', 'API'][
+  //           Math.floor(Math.random() * 7)
+  //         ],
+  //       };
+
+  //       setLogs((prev) => [...prev, newLog]);
+  //     }, 3000);
+
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [isPaused]);
   useEffect(() => {
-    const sampleLogs: Omit<ConsoleLog, 'id' | 'timestamp'>[] = [
-      { level: 'info', message: 'Server started on port 3000', source: 'System' },
-      { level: 'success', message: 'Database connected successfully', source: 'Database' },
-      { level: 'info', message: 'User login: admin@antartika.sch.id', source: 'Auth' },
-      { level: 'warn', message: 'High memory usage detected: 85%', source: 'System' },
-      { level: 'info', message: 'New registration: John Doe', source: 'PPDB' },
-      { level: 'success', message: 'Payment verified for user ID 1234', source: 'Payment' },
-      { level: 'error', message: 'Failed to upload document: timeout', source: 'Upload' },
-      { level: 'debug', message: 'API request to /api/admin/users took 142ms', source: 'API' },
-      { level: 'info', message: 'Document verification completed', source: 'Document' },
-      { level: 'warn', message: 'Disk space running low: 15% remaining', source: 'System' },
-    ];
+    const original: Partial<Record<keyof Console, any>> = {
+      log: console.log,
+      warn: console.warn,
+      error: console.error,
+      info: console.info,
+      debug: console.debug,
+    };
 
-    const initialLogs: ConsoleLog[] = sampleLogs.map((log, index) => ({
-      ...log,
-      id: index,
-      timestamp: new Date(Date.now() - (sampleLogs.length - index) * 10000),
-    }));
+    const pushLog = (level: ConsoleLog['level'], ...args: any[]) => {
+      const message = args
+        .map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a)))
+        .join(' ');
 
-    setLogs(initialLogs);
+      const newLog: ConsoleLog = {
+        id: Date.now(),
+        timestamp: new Date(),
+        level,
+        message,
+        source: 'Browser Console',
+      };
 
-    if (!isPaused) {
-      const interval = setInterval(() => {
-        const newLog: ConsoleLog = {
-          id: Date.now(),
-          timestamp: new Date(),
-          level: ['info', 'warn', 'error', 'success', 'debug'][
-            Math.floor(Math.random() * 5)
-          ] as ConsoleLog['level'],
-          message: [
-            'Database query executed',
-            'User session updated',
-            'Cache cleared',
-            'Backup completed',
-            'Email sent successfully',
-            'File processing in progress',
-            'Configuration reloaded',
-            'Authentication token refreshed',
-            'API rate limit reached',
-            'Background job started',
-          ][Math.floor(Math.random() * 10)],
-          source: ['System', 'Database', 'Auth', 'PPDB', 'Payment', 'Upload', 'API'][
-            Math.floor(Math.random() * 7)
-          ],
-        };
+      setLogs(prev => [...prev, newLog]);
+    };
 
-        setLogs((prev) => [...prev, newLog]);
-      }, 3000);
+    console.log = (...args) => {
+      pushLog('info', ...args);
+      original.log?.(...args);
+    };
+    console.warn = (...args) => {
+      pushLog('warn', ...args);
+      original.warn?.(...args);
+    };
+    console.error = (...args) => {
+      pushLog('error', ...args);
+      original.error?.(...args);
+    };
+    console.info = (...args) => {
+      pushLog('info', ...args);
+      original.info?.(...args);
+    };
+    console.debug = (...args) => {
+      pushLog('debug', ...args);
+      original.debug?.(...args);
+    };
+    return () => {
+      (Object.keys(original) as (keyof Console)[]).forEach((k) => {
+        if (original[k]) {
+          console[k] = original[k]!;
+        }
+      });
+    };
+  }, []);
+  useEffect(() => {
+    const socket = io("http://localhost:3030");
 
-      return () => clearInterval(interval);
-    }
-  }, [isPaused]);
+    socket.on("connect", () => {
+      console.info("Connected to backend log stream");
+    });
+
+    socket.on("disconnect", () => {
+      console.warn("Disconnected from backend log stream");
+    });
+
+    socket.on("log", (data: any) => {
+      const message =
+        typeof data === "object" ? JSON.stringify(data) : String(data);
+
+      const newLog: ConsoleLog = {
+        id: Date.now()-Math.random(),
+        timestamp: new Date(),
+        level: "info",
+        message,
+        source: "Backend",
+      };
+
+      setLogs((prev) => [...prev, newLog]);
+    });
+
+
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (autoScroll && logsEndRef.current) {
@@ -137,11 +224,10 @@ export default function ConsolePage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
         <button
           onClick={() => setFilter('all')}
-          className={`p-4 rounded-lg shadow-md transition-all ${
-            filter === 'all'
-              ? 'bg-gray-700 text-white shadow-lg'
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-          }`}
+          className={`p-4 rounded-lg shadow-md transition-all ${filter === 'all'
+            ? 'bg-gray-700 text-white shadow-lg'
+            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
         >
           <div className="text-2xl font-bold">{logCounts.all}</div>
           <div className="text-sm mt-1">All Logs</div>
@@ -149,11 +235,10 @@ export default function ConsolePage() {
 
         <button
           onClick={() => setFilter('info')}
-          className={`p-4 rounded-lg shadow-md transition-all ${
-            filter === 'info'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700'
-          }`}
+          className={`p-4 rounded-lg shadow-md transition-all ${filter === 'info'
+            ? 'bg-blue-600 text-white shadow-lg'
+            : 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700'
+            }`}
         >
           <div className="text-2xl font-bold">{logCounts.info}</div>
           <div className="text-sm mt-1">Info</div>
@@ -161,11 +246,10 @@ export default function ConsolePage() {
 
         <button
           onClick={() => setFilter('success')}
-          className={`p-4 rounded-lg shadow-md transition-all ${
-            filter === 'success'
-              ? 'bg-green-600 text-white shadow-lg'
-              : 'bg-white dark:bg-gray-800 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700'
-          }`}
+          className={`p-4 rounded-lg shadow-md transition-all ${filter === 'success'
+            ? 'bg-green-600 text-white shadow-lg'
+            : 'bg-white dark:bg-gray-800 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700'
+            }`}
         >
           <div className="text-2xl font-bold">{logCounts.success}</div>
           <div className="text-sm mt-1">Success</div>
@@ -173,11 +257,10 @@ export default function ConsolePage() {
 
         <button
           onClick={() => setFilter('warn')}
-          className={`p-4 rounded-lg shadow-md transition-all ${
-            filter === 'warn'
-              ? 'bg-yellow-600 text-white shadow-lg'
-              : 'bg-white dark:bg-gray-800 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700'
-          }`}
+          className={`p-4 rounded-lg shadow-md transition-all ${filter === 'warn'
+            ? 'bg-yellow-600 text-white shadow-lg'
+            : 'bg-white dark:bg-gray-800 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700'
+            }`}
         >
           <div className="text-2xl font-bold">{logCounts.warn}</div>
           <div className="text-sm mt-1">Warning</div>
@@ -185,11 +268,10 @@ export default function ConsolePage() {
 
         <button
           onClick={() => setFilter('error')}
-          className={`p-4 rounded-lg shadow-md transition-all ${
-            filter === 'error'
-              ? 'bg-red-600 text-white shadow-lg'
-              : 'bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-gray-700'
-          }`}
+          className={`p-4 rounded-lg shadow-md transition-all ${filter === 'error'
+            ? 'bg-red-600 text-white shadow-lg'
+            : 'bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-gray-700'
+            }`}
         >
           <div className="text-2xl font-bold">{logCounts.error}</div>
           <div className="text-sm mt-1">Error</div>
@@ -197,11 +279,10 @@ export default function ConsolePage() {
 
         <button
           onClick={() => setFilter('debug')}
-          className={`p-4 rounded-lg shadow-md transition-all ${
-            filter === 'debug'
-              ? 'bg-purple-600 text-white shadow-lg'
-              : 'bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-gray-700'
-          }`}
+          className={`p-4 rounded-lg shadow-md transition-all ${filter === 'debug'
+            ? 'bg-purple-600 text-white shadow-lg'
+            : 'bg-white dark:bg-gray-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-gray-700'
+            }`}
         >
           <div className="text-2xl font-bold">{logCounts.debug}</div>
           <div className="text-sm mt-1">Debug</div>
@@ -221,11 +302,10 @@ export default function ConsolePage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setAutoScroll(!autoScroll)}
-              className={`px-3 py-2 rounded text-sm transition ${
-                autoScroll
-                  ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
+              className={`px-3 py-2 rounded text-sm transition ${autoScroll
+                ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
             >
               <i className={`fa-solid fa-arrow-down mr-2`}></i>
               Auto-scroll
@@ -233,11 +313,10 @@ export default function ConsolePage() {
 
             <button
               onClick={() => setIsPaused(!isPaused)}
-              className={`px-3 py-2 rounded text-sm transition ${
-                isPaused
-                  ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
-                  : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-800'
-              }`}
+              className={`px-3 py-2 rounded text-sm transition ${isPaused
+                ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
+                : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 hover:bg-yellow-200 dark:hover:bg-yellow-800'
+                }`}
             >
               <i className={`fa-solid ${isPaused ? 'fa-play' : 'fa-pause'} mr-2`}></i>
               {isPaused ? 'Resume' : 'Pause'}
@@ -255,7 +334,7 @@ export default function ConsolePage() {
 
         <div
           ref={logsContainerRef}
-          className="p-4 bg-gray-900 font-mono text-sm overflow-y-auto"
+          className="p-4 bg-gray-900 font-mono text-sm overflow-y-auto scrollbar-none"
           style={{ height: '60vh', maxHeight: '600px' }}
         >
           {filteredLogs.length === 0 ? (
@@ -267,7 +346,7 @@ export default function ConsolePage() {
             filteredLogs.map((log) => (
               <div
                 key={log.id}
-                className={`mb-2 p-3 rounded border ${getLogColor(log.level)} flex items-start gap-3`}
+                className={`mb-2 p-3 dark:bg-gray-800 dark:border-gray-700 rounded border ${getLogColor(log.level)} flex items-start gap-3`}
               >
                 <i className={`fa-solid ${getLevelIcon(log.level)} mt-0.5 flex-shrink-0`}></i>
                 <div className="flex-1 min-w-0">
