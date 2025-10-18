@@ -100,23 +100,23 @@ export default function ConsolePage() {
 
     console.log = (...args) => {
       pushLog('info', ...args);
-      original.log?.(...args);
+      original.log?.(...args); // panggil console.log original di sini
     };
     console.warn = (...args) => {
       pushLog('warn', ...args);
-      original.warn?.(...args);
+      original.warn?.(...args); // panggil console.warn original di sini
     };
     console.error = (...args) => {
       pushLog('error', ...args);
-      original.error?.(...args);
+      original.error?.(...args); // panggil console.error original di sini
     };
     console.info = (...args) => {
       pushLog('info', ...args);
-      original.info?.(...args);
+      original.info?.(...args); // panggil console.info original di sini
     };
     console.debug = (...args) => {
       pushLog('debug', ...args);
-      original.debug?.(...args);
+      original.debug?.(...args); // panggil console.debug original di sini
     };
     return () => {
       (Object.keys(original) as (keyof Console)[]).forEach((k) => {
@@ -126,39 +126,40 @@ export default function ConsolePage() {
       });
     };
   }, []);
-  useEffect(() => {
-    const socket = io("http://localhost:3030");
 
-    socket.on("connect", () => {
-      console.info("Connected to backend log stream");
-    });
+  // useEffect(() => {
+  //   const socket = io("http://localhost:3030");
 
-    socket.on("disconnect", () => {
-      console.warn("Disconnected from backend log stream");
-    });
+  //   socket.on("connect", () => {
+  //     console.info("Connected to backend log stream");
+  //   });
 
-    socket.on("log", (data: any) => {
-      const message =
-        typeof data === "object" ? JSON.stringify(data) : String(data);
+  //   socket.on("disconnect", () => {
+  //     console.warn("Disconnected from backend log stream");
+  //   });
 
-      const newLog: ConsoleLog = {
-        id: Date.now()-Math.random(),
-        timestamp: new Date(),
-        level: "info",
-        message,
-        source: "Backend",
-      };
+  //   socket.on("log", (data: any) => {
+  //     const message =
+  //       typeof data === "object" ? JSON.stringify(data) : String(data);
 
-      setLogs((prev) => [...prev, newLog]);
-    });
+  //     const newLog: ConsoleLog = {
+  //       id: Date.now()-Math.random(),
+  //       timestamp: new Date(),
+  //       level: "info",
+  //       message,
+  //       source: "Backend",
+  //     };
+
+  //     setLogs((prev) => [...prev, newLog]);
+  //   });
 
 
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (socket) {
+  //       socket.disconnect();
+  //     }
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (autoScroll && logsEndRef.current) {

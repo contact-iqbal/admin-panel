@@ -117,10 +117,10 @@ export default function KelolaA() {
               {filteredUsers.map((user) => (
                 <tr key={user.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                   <td className="p-3 dark:text-gray-300">{user.id}</td>
-                  <td className="p-3 dark:text-gray-300">{user.email}</td>
+                  <td className="p-3 break-all dark:text-gray-300">{user.email}</td>
                   <td className="p-3 font-medium dark:text-white">{user.nama_lengkap || '-'}</td>
-                  <td className="p-3 dark:text-gray-300">{user.nisn || '-'}</td>
-                  <td className="p-3 dark:text-gray-300">{user.asal_sekolah || '-'}</td>
+                  <td className="p-3 break-all dark:text-gray-300">{user.nisn || '-'}</td>
+                  <td className="p-3 break-all dark:text-gray-300">{user.asal_sekolah || '-'}</td>
                   <td className="p-3 text-center">
                     <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-sm">
                       {user.total_berkas}
@@ -137,7 +137,7 @@ export default function KelolaA() {
                       {user.total_pembayaran > 0 ? 'Lunas' : 'Belum Bayar'}
                     </span>
                   </td>
-                  <td className="p-3 text-center dark:text-gray-300">
+                  <td className="p-3 text-center break-all dark:text-gray-300">
                     {user.nomor_peserta || '-'}
                   </td>
                   <td className="p-3 text-center">

@@ -178,7 +178,7 @@ export default function KelolaJalur() {
                 periode_mulai: '',
                 periode_selesai: '',
                 biaya: '',
-                status: 'active',
+                status: 'aktif',
               });
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition font-medium w-full sm:w-auto"
@@ -240,8 +240,8 @@ export default function KelolaJalur() {
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                 >
-                  <option value="active">Aktif</option>
-                  <option value="inactive">Tidak Aktif</option>
+                  <option value="aktif">Aktif</option>
+                  <option value="nonaktif">Tidak Aktif</option>
                 </select>
               </div>
             </div>

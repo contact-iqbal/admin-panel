@@ -215,8 +215,8 @@ export default function UserDetailPage() {
                   className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
                 >
                   <option value="">Pilih Jenis Kelamin</option>
-                  <option value="L">Laki-laki</option>
-                  <option value="P">Perempuan</option>
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
                 </select>
                 <textarea
                   placeholder="Alamat"
@@ -271,7 +271,7 @@ export default function UserDetailPage() {
                 </div>
                 <div>
                   <span className="font-semibold">Jenis Kelamin:</span>{' '}
-                  {data.dataDiri.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                  {data.dataDiri.jenis_kelamin === 'Laki-laki' ? 'Laki-laki' : 'Perempuan'}
                 </div>
                 <div>
                   <span className="font-semibold">Alamat:</span> {data.dataDiri.alamat || '-'}
@@ -375,7 +375,7 @@ export default function UserDetailPage() {
         </div>
 
         {data.kartu && (
-          <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+          <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-md p-6 lg:col-span-2">
             <h2 className="text-xl font-bold mb-4">Kartu Peserta</h2>
             <div className="space-y-2">
               <div>
@@ -396,7 +396,7 @@ export default function UserDetailPage() {
               </div>
               <div>
                 <span className="font-semibold">Dibuat:</span>{' '}
-                {new Date(data.kartu.created_at).toLocaleDateString('id-ID')}
+                {new Date(data.kartu.generated_at).toLocaleDateString('id-ID')}
               </div>
             </div>
           </div>

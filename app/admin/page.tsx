@@ -89,7 +89,7 @@ export default function AdminDashboard() {
           </div>
         </Link>
 
-        <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-lg shadow-lg">
+        <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1">
           <div className="flex justify-between items-start mb-3">
             <div className="text-4xl font-bold">{stats?.totalKartu || 0}</div>
             <i className="fas fa-id-card text-3xl opacity-50"></i>

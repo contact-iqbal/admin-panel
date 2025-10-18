@@ -104,7 +104,11 @@ export default function KelolaPembayaran() {
     <DashboardLayout>
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-2 dark:text-white">Kelola Pembayaran</h1>
-        <p className="text-gray-600 dark:text-gray-400">Monitoring pembayaran peserta SPMB</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-3">Monitoring pembayaran peserta SPMB</p>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div className="text-base md:text-xl font-bold text-blue-600 dark:text-blue-400">{formatRupiah(totalAmount)}</div>
+          <div className="text-gray-600 dark:text-gray-400 text-sm">Total Pendapatan</div>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-6">
@@ -125,14 +129,16 @@ export default function KelolaPembayaran() {
           <div className="text-gray-600 dark:text-gray-400 text-sm">Pending</div>
         </div>
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+            {pembayaranList.filter((p) => p.status === 'failed').length}
+          </div>
+          <div className="text-gray-600 dark:text-gray-400 text-sm">Failed</div>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
           <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
             {pembayaranList.filter((p) => p.status === 'expired').length}
           </div>
           <div className="text-gray-600 dark:text-gray-400 text-sm">Expired</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow col-span-2 md:col-span-1">
-          <div className="text-base md:text-xl font-bold text-blue-600 dark:text-blue-400">{formatRupiah(totalAmount)}</div>
-          <div className="text-gray-600 dark:text-gray-400 text-sm">Total Pendapatan</div>
         </div>
       </div>
 
@@ -174,9 +180,9 @@ export default function KelolaPembayaran() {
             <tbody>
               {filteredPembayaran.map((pembayaran) => (
                 <tr key={pembayaran.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                  <td className="p-3 font-mono text-sm dark:text-gray-300">{pembayaran.invoice_id}</td>
-                  <td className="p-3 font-medium dark:text-white">{pembayaran.nama_lengkap || '-'}</td>
-                  <td className="p-3 dark:text-gray-300">{pembayaran.email}</td>
+                  <td className="p-3 font-mono text-sm break-all dark:text-gray-300">{pembayaran.invoice_id}</td>
+                  <td className="p-3 font-medium break-words dark:text-white">{pembayaran.nama_lengkap || '-'}</td>
+                  <td className="p-3 break-all dark:text-gray-300">{pembayaran.email}</td>
                   <td className="p-3 dark:text-gray-300">{pembayaran.jalur_nama || '-'}</td>
                   <td className="p-3 text-right font-semibold dark:text-gray-200">
                     {formatRupiah(pembayaran.amount)}

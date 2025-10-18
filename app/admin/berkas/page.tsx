@@ -181,7 +181,7 @@ export default function KelolaBerkas() {
                 <tr key={berkas.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                   <td className="p-3 dark:text-gray-300">{berkas.id}</td>
                   <td className="p-3 font-medium dark:text-white">{berkas.nama_lengkap || '-'}</td>
-                  <td className="p-3 dark:text-gray-300">{berkas.email}</td>
+                  <td className="p-3 break-all dark:text-gray-300">{berkas.email}</td>
                   <td className="p-3 capitalize dark:text-gray-300">{berkas.jenis_berkas}</td>
                   <td className="p-3 text-center">
                     <span className={`inline-block px-3 py-1 rounded text-sm font-medium ${getStatusBadge(berkas.status)}`}>

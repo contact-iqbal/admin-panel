@@ -30,12 +30,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
-  const [openMenus, setOpenMenus] = useState<string[]>(['Manajemen Data']);
+  // const [openMenus, setOpenMenus] = useState<string[]>(['Manajemen Data']);
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
   const [pembayaranList, setPembayaranList] = useState<Pembayaran[]>([]);
+  const [unread, setunread] = useState();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
+    
     fetchPembayaran();
 
     if (!token) {
@@ -61,6 +64,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     } else {
       applyTheme('system');
     }
+  }, [router]);
+  useEffect(() => {
+    const fetchunread = async () => {
+      const res = await fetch("/api/admin/chat/store");
+      const history = await res.json();
+      const unreadCountsArray = history.sessions.map((s: { unreadCount: any; }) => s.unreadCount);
+      console.log("Individual unread counts:", unreadCountsArray);
+
+      const totalUnread = unreadCountsArray.reduce((acc: any, count: any) => acc + count, 0);
+      console.log("Total unread count:", totalUnread);
+
+      setunread(totalUnread)
+    }
+    fetchunread();
   }, [router]);
   const fetchPembayaran = async () => {
     try {
@@ -144,7 +161,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       label: 'Komunikasi',
       icon: 'fa-solid fa-comments',
       children: [
-        { href: '/admin/chat', label: 'Chat WhatsApp', icon: 'fa-brands fa-whatsapp', badge: '5', badgeColor: 'bg-blue-500' },
+        { href: '/admin/chat', label: 'Chat WhatsApp', icon: 'fa-brands fa-whatsapp', badge:`${unread}`, badgeColor: 'bg-blue-500' },
       ]
     },
     {
@@ -211,7 +228,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <i className={`${item.icon} w-5 text-center mr-2 ${isChild ? 'text-xs' : ''}`}></i>
           <span>{item.label}</span>
         </div>
-        {item.badge && (
+        {item.badge && item.badge !== "0" && (
           <span className={`${item.badgeColor} text-white text-xs px-2 py-0.5 rounded-full font-semibold`}>
             {item.badge}
           </span>
@@ -248,7 +265,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <i className="fa-solid fa-user text-gray-400 text-sm"></i>
             </div>
             <span className="text-gray-300 text-sm font-medium truncate">
-              {user?.name || 'Admin User'}
+              {user?.email || 'Admin User'}
             </span>
           </div>
         </div>
