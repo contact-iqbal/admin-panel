@@ -74,7 +74,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 
-const BUCKET_NAME = "spmb-digiforward-blob";
+const BUCKET_NAME = "chat-storage";
 const FILE_NAME = "chat_store.json";
 
 const isVercel = process.env.VERCEL === "1";
