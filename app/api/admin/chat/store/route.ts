@@ -88,11 +88,18 @@ function getBlobUrl() {
 // Load store
 async function loadStore() {
   if (isVercel) {
+    const fs = await import('fs/promises');
+    // try {
+    //   const res = await fetch(getBlobUrl());
+    //   if (!res.ok) return { messages: [], sessions: [] };
+    //   const text = await res.text();
+    //   return JSON.parse(text);
+    // } catch {
+    //   return { messages: [], sessions: [] };
+    // }
     try {
-      const res = await fetch(getBlobUrl());
-      if (!res.ok) return { messages: [], sessions: [] };
-      const text = await res.text();
-      return JSON.parse(text);
+      const data = await fs.readFile(LOCAL_FILE, 'utf-8');
+      return JSON.parse(data);
     } catch {
       return { messages: [], sessions: [] };
     }
