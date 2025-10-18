@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { io as sharedIO, ensureSocketServer } from "../route";
+import { io, ensureSocketServer } from "@/lib/socket";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   });
 
   // ✅ Ensure Socket.IO is running
-  let ioInstance = sharedIO;
+  let ioInstance = io;
   if (!ioInstance) {
     console.warn("⚠️ No active Socket.IO instance, starting one...");
     ioInstance = ensureSocketServer();
