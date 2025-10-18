@@ -1,9 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { ensureSocketServer } from "@/lib/socket";
 
-export async function GET(req: NextRequest) {
-  ensureSocketServer();
-  return NextResponse.json({ success: true, message: "Socket.IO server active" });
-}
+export async function GET() {
+  const io = ensureSocketServer();
 
-export { ensureSocketServer };
+  if (io) {
+    return NextResponse.json({
+      success: true,
+      message: "✅ Local Socket.IO server active on port 3001",
+    });
+  } else {
+    return NextResponse.json({
+      success: true,
+      message: "♻️ Running on Vercel — no local Socket.IO server",
+    });
+  }
+}

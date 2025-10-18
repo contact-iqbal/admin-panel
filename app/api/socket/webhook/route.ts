@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { io, ensureSocketServer } from "@/lib/socket";
+import { ensureSocketServer, getSocketClient } from "@/lib/socket";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -15,15 +15,18 @@ export async function POST(req: NextRequest) {
     quoted,
   });
 
-  // ✅ Ensure Socket.IO is running
-  let ioInstance = io;
-  if (!ioInstance) {
-    console.warn("⚠️ No active Socket.IO instance, starting one...");
-    ioInstance = ensureSocketServer();
+  // ✅ Emit to connected clients
+  let socket;
+  if (process.env.VERCEL === "1") {
+    // Production: use Railway Socket.IO client
+    socket = getSocketClient();
+  } else {
+    // Local dev: start/get local server
+    const ioInstance = ensureSocketServer();
+    socket = ioInstance!;
   }
 
-  // ✅ Emit to connected clients
-  ioInstance.emit("new_message", {
+  socket.emit("new_message", {
     id,
     user,
     from,
@@ -37,7 +40,7 @@ export async function POST(req: NextRequest) {
   });
 
   // ✅ Save message to chat store
-  await fetch(`http://localhost:3000/api/admin/chat/store`, {
+  await fetch(`${process.env.BASE_URL}/api/admin/chat/store`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

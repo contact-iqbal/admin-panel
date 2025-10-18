@@ -1,10 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { io } from "socket.io-client";
+import { NextRequest, NextResponse } from "next/server";
+import { io as ClientIO, Socket } from "socket.io-client";
 import axios from "axios";
 
-let socket: any;
-if (!socket) {
-  socket = io("http://localhost:3001", { transports: ["websocket"] });
+let socket: Socket | null = null;
+
+/**
+ * Initialize socket connection (dual-mode)
+ */
+function getSocket(): Socket {
+  if (socket) return socket;
+
+  const url =
+    process.env.VERCEL === "1"
+      ? process.env.NEXT_PUBLIC_SOCKET_URL! // Railway in prod
+      : "http://localhost:3001"; // local dev
+
+  socket = ClientIO(url, { transports: ["websocket"] });
+
+  socket.on("connect", () =>
+    console.log("✅ Connected to Socket.IO server:", url)
+  );
+  socket.on("disconnect", () =>
+    console.log("❌ Disconnected from Socket.IO server:", url)
+  );
+
+  return socket;
 }
 
 export async function POST(request: NextRequest) {
@@ -14,47 +34,36 @@ export async function POST(request: NextRequest) {
 
     if (!to || !message) {
       return NextResponse.json(
-        { error: 'Parameter to dan message wajib diisi' },
+        { error: "Parameter 'to' dan 'message' wajib diisi" },
         { status: 400 }
       );
     }
-    console.log('📤 API: Mengirim pesan WhatsApp');
-    console.log('   Tujuan:', to);
-    console.log('   Pesan:', message);
-    console.log('   Timestamp:', new Date().toISOString());
-    await axios.post("http://localhost:4000/send-message", { to, message });
 
-    // socket.emit("new_message", {
-    //   from: to,
-    //   message,
-    //   timestamp: new Date(),
-    //   is_from_me: true,
-    //   status: "sent",
-    // });
+    console.log("📤 API: Mengirim pesan WhatsApp");
+    console.log("   Tujuan:", to);
+    console.log("   Pesan:", message);
+    console.log("   Timestamp:", new Date().toISOString());
 
-    // const response = {
-    //   success: true,
-    //   message: 'Pesan berhasil dikirim (console)',
-    //   data: {
-    //     to,
-    //     message,
-    //     timestamp: new Date().toISOString(),
-    //     messageId: `msg_${Date.now()}`,
-    //   },
-    // };
+    await axios.post(`${process.env.WA_URL}/send-message`, { to, message });
 
-    // console.log('✅ API: Response:', response);
+    // Emit event to clients
+    getSocket().emit("new_message", {
+      from: to,
+      message,
+      timestamp: new Date(),
+      is_from_me: true,
+      status: "sent",
+    });
 
-    // return NextResponse.json(response);
     return NextResponse.json({
       success: true,
       message: "Pesan sedang dikirim",
       data: { to, message, timestamp: new Date().toISOString() },
     });
   } catch (error) {
-    console.error('❌ API Error:', error);
+    console.error("❌ API Error:", error);
     return NextResponse.json(
-      { error: 'Terjadi kesalahan saat mengirim pesan' },
+      { error: "Terjadi kesalahan saat mengirim pesan" },
       { status: 500 }
     );
   }

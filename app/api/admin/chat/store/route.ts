@@ -80,7 +80,7 @@ const FILE_NAME = "chat_store.json";
 const isVercel = process.env.VERCEL === "1";
 const LOCAL_FILE = "./chat_store.json";
 
-// Helper to get the Blob URL (public access)
+// Get public blob URL
 function getBlobUrl() {
   return `https://blob.vercel-storage.com/${BUCKET_NAME}/${FILE_NAME}`;
 }
@@ -91,8 +91,8 @@ async function loadStore() {
     try {
       const res = await fetch(getBlobUrl());
       if (!res.ok) return { messages: [], sessions: [] };
-      const data = await res.text();
-      return JSON.parse(data);
+      const text = await res.text();
+      return JSON.parse(text);
     } catch {
       return { messages: [], sessions: [] };
     }
@@ -121,11 +121,19 @@ async function saveStore(store: any) {
   }
 }
 
+// POST — add message or update session
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { id, user, from, type, message, data, mimetype, quoted, timestamp, is_from_me } = body;
 
   const store = await loadStore();
+
+  if (body.type === "update_session") {
+    const session = store.sessions.find((s: any) => s.phone === body.phone);
+    if (session) session.unreadCount = body.unreadCount;
+    await saveStore(store);
+    return NextResponse.json({ success: true, sessions: store.sessions });
+  }
 
   const msg = {
     id: id || Date.now(),
@@ -158,17 +166,11 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  if (body.type === "update_session") {
-    const session = store.sessions.find((s: any) => s.phone === body.phone);
-    if (session) session.unreadCount = body.unreadCount;
-    await saveStore(store);
-    return NextResponse.json({ success: true, sessions: store.sessions });
-  }
-
   await saveStore(store);
   return NextResponse.json({ success: true, msg, sessions: store.sessions });
 }
 
+// GET — retrieve store
 export async function GET() {
   const store = await loadStore();
   return NextResponse.json(store);

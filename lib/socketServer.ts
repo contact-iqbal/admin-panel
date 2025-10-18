@@ -1,12 +1,24 @@
-import { Server } from "socket.io";
+import { Server as IOServer } from "socket.io";
+import { io as ClientIO, Socket } from "socket.io-client";
 
-let io: Server | null = null;
+const isVercel = process.env.VERCEL === "1";
 
-export function getIO(server?: any) {
+let io: IOServer | null = null;
+let clientSocket: Socket | null = null;
+
+/**
+ * Initialize or get a local Socket.IO server (only for local dev)
+ */
+export function getIO(server?: any): IOServer | null {
+  if (isVercel) {
+    console.log("♻️ Skipping local Socket.IO server on Vercel");
+    return null;
+  }
+
   if (io) return io;
   if (!server) throw new Error("❌ No server provided to init Socket.IO");
 
-  io = new Server(server, {
+  io = new IOServer(server, {
     cors: { origin: "*" },
   });
 
@@ -18,6 +30,33 @@ export function getIO(server?: any) {
   return io;
 }
 
-export function getExistingIO() {
+/**
+ * Get existing local server instance (null if not initialized)
+ */
+export function getExistingIO(): IOServer | null {
   return io;
+}
+
+/**
+ * Get or initialize a client socket (for production / Vercel / Railway)
+ */
+export function getSocketClient(): Socket {
+  if (!clientSocket) {
+    if (!process.env.NEXT_PUBLIC_SOCKET_URL) {
+      throw new Error("❌ NEXT_PUBLIC_SOCKET_URL not defined");
+    }
+
+    clientSocket = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL, {
+      transports: ["websocket"],
+    });
+
+    clientSocket.on("connect", () =>
+      console.log("✅ Connected to Railway Socket.IO server")
+    );
+    clientSocket.on("disconnect", () =>
+      console.log("❌ Disconnected from Railway Socket.IO server")
+    );
+  }
+
+  return clientSocket;
 }

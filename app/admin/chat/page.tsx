@@ -61,7 +61,13 @@ export default function ChatPage() {
     scrollToBottom();
   }, [activePhone]);
   useEffect(() => {
-    const socket = io("http://localhost:3001", {
+    // Determine socket URL based on environment
+    const socketUrl =
+      process.env.NEXT_PUBLIC_SOCKET_URL && process.env.VERCEL === "1"
+        ? process.env.NEXT_PUBLIC_SOCKET_URL
+        : "http://localhost:3001";
+
+    const socket = io(socketUrl, {
       transports: ["websocket", "polling"],
       reconnection: true,
     });
@@ -84,7 +90,6 @@ export default function ChatPage() {
 
       setSessions((prev) => {
         const existing = prev.find((s) => s.phone === from);
-
         let preview = msg.message;
         if (msg.type === "sticker") preview = "🖼️ [Sticker]";
         if (msg.type === "image") preview = "📷 [Image]";
@@ -97,9 +102,7 @@ export default function ChatPage() {
                 lastMessage: preview,
                 lastMessageTime: new Date(msg.timestamp),
                 unreadCount:
-                  from === activePhone
-                    ? 0 
-                    : s.unreadCount + 1, 
+                  from === activePhone ? 0 : s.unreadCount + 1,
               }
               : s
           );
@@ -134,14 +137,14 @@ export default function ChatPage() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [activePhone]);
 
   const handleSelectSession = (phone: string) => {
     setActivePhone(phone);
     setSessions((prev) =>
       prev.map((s) =>
         s.phone === phone
-          ? { ...s, unreadCount: 0 } 
+          ? { ...s, unreadCount: 0 }
           : s
       )
     );

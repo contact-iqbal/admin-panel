@@ -1,43 +1,68 @@
 import { Server } from "socket.io";
 import { createServer } from "http";
+import { io as ClientIO, Socket } from "socket.io-client";
+
+const isVercel = process.env.VERCEL === "1";
 
 const globalForSocket = global as unknown as {
   io?: Server;
   httpServer?: ReturnType<typeof createServer>;
+  clientSocket?: Socket;
 };
 
-export function ensureSocketServer() {
+/**
+ * Start Socket.IO server locally on port 3001.
+ * Skipped on Vercel.
+ */
+export function ensureSocketServer(): Server | null {
+  if (isVercel) {
+    console.log("♻️ Skipping local Socket.IO server on Vercel");
+    return null;
+  }
+
   if (!globalForSocket.io) {
-    console.log("🚀 Starting new Socket.IO server...");
+    console.log("🚀 Starting local Socket.IO server...");
 
     const httpServer = createServer();
     const io = new Server(httpServer, {
-      cors: { origin: ["http://localhost:3000"], methods: ["GET", "POST"] },
+      cors: { origin: [`${process.env.BASE_URL}`], methods: ["GET", "POST"] },
     });
 
     io.on("connection", (socket) => {
       console.log("✅ Client connected:", socket.id);
-
-      socket.onAny((event, ...args) => {
-        console.log("📡 Received event from client:", event, args);
-      });
-
-      socket.on("disconnect", () =>
-        console.log("❌ Client disconnected:", socket.id)
-      );
     });
 
-    httpServer.listen(3001, () => {
-      console.log("✅ Socket.IO server running on port 3001");
-    });
+    httpServer.listen(3001, () =>
+      console.log("✅ Local Socket.IO server running on port 3001")
+    );
 
     globalForSocket.io = io;
     globalForSocket.httpServer = httpServer;
-  } else {
-    console.log("♻️ Reusing existing Socket.IO server");
   }
 
-  return globalForSocket.io;
+  return globalForSocket.io!;
 }
 
+/**
+ * For production (Vercel) or remote connections: get a Socket.IO client.
+ */
+export function getSocketClient(): Socket {
+  if (!globalForSocket.clientSocket) {
+    globalForSocket.clientSocket = ClientIO(
+      process.env.NEXT_PUBLIC_SOCKET_URL!, // your Railway Socket.IO server
+      { transports: ["websocket"] }
+    );
+
+    globalForSocket.clientSocket.on("connect", () =>
+      console.log("✅ Connected to Railway Socket.IO server")
+    );
+    globalForSocket.clientSocket.on("disconnect", () =>
+      console.log("❌ Disconnected from Railway Socket.IO server")
+    );
+  }
+
+  return globalForSocket.clientSocket;
+}
+
+// Export the local server io (may be null on Vercel)
 export const io = globalForSocket.io ?? null;
