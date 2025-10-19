@@ -86,20 +86,40 @@ function getBlobUrl() {
 }
 
 // Load store
+// async function loadStore() {
+//   if (isVercel) {
+//     const fs = await import('fs/promises');
+//     // try {
+//     //   const res = await fetch(getBlobUrl());
+//     //   if (!res.ok) return { messages: [], sessions: [] };
+//     //   const text = await res.text();
+//     //   return JSON.parse(text);
+//     // } catch {
+//     //   return { messages: [], sessions: [] };
+//     // }
+//     try {
+//       const data = await fs.readFile(LOCAL_FILE, 'utf-8');
+//       return JSON.parse(data);
+//     } catch {
+//       return { messages: [], sessions: [] };
+//     }
+//   } else {
+//     try {
+//       const fs = await import("fs/promises");
+//       const data = await fs.readFile(LOCAL_FILE, "utf-8");
+//       return JSON.parse(data);
+//     } catch {
+//       return { messages: [], sessions: [] };
+//     }
+//   }
+// }
 async function loadStore() {
   if (isVercel) {
-    const fs = await import('fs/promises');
-    // try {
-    //   const res = await fetch(getBlobUrl());
-    //   if (!res.ok) return { messages: [], sessions: [] };
-    //   const text = await res.text();
-    //   return JSON.parse(text);
-    // } catch {
-    //   return { messages: [], sessions: [] };
-    // }
     try {
-      const data = await fs.readFile(LOCAL_FILE, 'utf-8');
-      return JSON.parse(data);
+      const res = await fetch(getBlobUrl());
+      if (!res.ok) return { messages: [], sessions: [] };
+      const text = await res.text();
+      return JSON.parse(text);
     } catch {
       return { messages: [], sessions: [] };
     }
@@ -113,6 +133,7 @@ async function loadStore() {
     }
   }
 }
+
 
 // Save store
 async function saveStore(store: any) {
