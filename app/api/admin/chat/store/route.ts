@@ -82,7 +82,7 @@ const LOCAL_FILE = "./chat_store.json";
 
 // Get public blob URL
 function getBlobUrl() {
-  return `https://blob.vercel-storage.com/${BUCKET_NAME}/${FILE_NAME}`;
+  return `https://ed5uvumrhqqw9cs3.public.blob.vercel-storage.com/${BUCKET_NAME}/${FILE_NAME}`;
 }
 
 // Load store
