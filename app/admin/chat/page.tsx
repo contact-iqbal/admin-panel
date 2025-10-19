@@ -3,6 +3,7 @@
 import DashboardLayout from '@/components/DashboardLayout';
 import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
+import { ensureSocketServer, getSocketClient } from "@/lib/socket";
 
 interface ChatMessage {
   mimetype: any;
@@ -44,7 +45,6 @@ export default function ChatPage() {
     const fetchHistory = async () => {
       const res = await fetch("/api/admin/chat/store");
       const history = await res.json();
-      console.log("activephone: ", activePhone)
       setMessages(history.messages.map((m: { from: string; }) => ({
         ...m,
         from: m.from.split("@")[0],
@@ -59,13 +59,18 @@ export default function ChatPage() {
   }, []);
   useEffect(() => {
     scrollToBottom();
+    console.log("activephone: ", activePhone)
   }, [activePhone]);
   useEffect(() => {
     // Determine socket URL based on environment
-    const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL && process.env.VERCEL === "1"
-        ? process.env.NEXT_PUBLIC_SOCKET_URL
-        : "http://localhost:3001";
+    let socketUrl = null
+    if (process.env.NEXT_PUBLIC_VERCEL === 'true') {
+      console.log("hit vercel")
+      socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL
+    } else {
+      console.log("hit local")
+      socketUrl = "http://localhost:3001"
+    }
 
     const socket = io(socketUrl, {
       transports: ["websocket", "polling"],

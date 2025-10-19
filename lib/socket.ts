@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import { io as ClientIO, Socket } from "socket.io-client";
 
-const isVercel = process.env.VERCEL === "1";
+const isVercel = process.env.VERCEL === "true";
 
 const globalForSocket = global as unknown as {
   io?: Server;
@@ -49,7 +49,7 @@ export function ensureSocketServer(): Server | null {
 export function getSocketClient(): Socket {
   if (!globalForSocket.clientSocket) {
     globalForSocket.clientSocket = ClientIO(
-      process.env.NEXT_PUBLIC_SOCKET_URL!, // your Railway Socket.IO server
+      process.env.SOCKET_URL!, 
       { transports: ["websocket"] }
     );
 
@@ -62,6 +62,28 @@ export function getSocketClient(): Socket {
   }
 
   return globalForSocket.clientSocket;
+}
+export async function emitMessage(payload: any) {
+  if (process.env.VERCEL === "true") {
+    const socket = getSocketClient();
+
+    // Wait until the client connects
+    if (!socket.connected) {
+      await new Promise<void>((resolve) => {
+        socket.once("connect", () => resolve());
+      });
+    }
+
+    console.log("emit");
+    socket.emit("new_message", payload);
+
+    // Wait a tick to ensure the event is sent before the function exits
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  } else {
+    console.log("local io socket");
+    const io = ensureSocketServer();
+    io?.emit("new_message", payload);
+  }
 }
 
 // Export the local server io (may be null on Vercel)

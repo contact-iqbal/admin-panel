@@ -11,8 +11,8 @@ function getSocket(): Socket {
   if (socket) return socket;
 
   const url =
-    process.env.VERCEL === "1"
-      ? process.env.NEXT_PUBLIC_SOCKET_URL! // Railway in prod
+    process.env.VERCEL === "true"
+      ? process.env.SOCKET_URL! // Railway in prod
       : "http://localhost:3001"; // local dev
 
   socket = ClientIO(url, { transports: ["websocket"] });
@@ -46,14 +46,23 @@ export async function POST(request: NextRequest) {
 
     await axios.post(`${process.env.WA_URL}/send-message`, { to, message });
 
-    // Emit event to clients
-    getSocket().emit("new_message", {
+    const socket = getSocket();
+
+    if (!socket.connected) {
+      await new Promise<void>((resolve) => socket.once("connect", () => resolve()));
+    }
+
+    // Now safely emit
+    socket.emit("new_message", {
       from: to,
       message,
       timestamp: new Date(),
       is_from_me: true,
       status: "sent",
     });
+
+    // Optional: give a tiny delay so the event has time to send
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     return NextResponse.json({
       success: true,

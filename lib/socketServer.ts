@@ -1,7 +1,7 @@
 import { Server as IOServer } from "socket.io";
 import { io as ClientIO, Socket } from "socket.io-client";
 
-const isVercel = process.env.VERCEL === "1";
+const isVercel = process.env.VERCEL === "true";
 
 let io: IOServer | null = null;
 let clientSocket: Socket | null = null;
@@ -42,11 +42,11 @@ export function getExistingIO(): IOServer | null {
  */
 export function getSocketClient(): Socket {
   if (!clientSocket) {
-    if (!process.env.NEXT_PUBLIC_SOCKET_URL) {
-      throw new Error("❌ NEXT_PUBLIC_SOCKET_URL not defined");
+    if (!process.env.SOCKET_URL) {
+      throw new Error("❌ OCKET_URL not defined");
     }
 
-    clientSocket = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL, {
+    clientSocket = ClientIO(process.env.SOCKET_URL, {
       transports: ["websocket"],
     });
 

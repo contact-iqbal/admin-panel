@@ -77,7 +77,7 @@ import { put } from "@vercel/blob";
 const BUCKET_NAME = "chat-storage";
 const FILE_NAME = "chat_store.json";
 
-const isVercel = process.env.VERCEL === "1";
+const isVercel = process.env.VERCEL === "true";
 const LOCAL_FILE = "./chat_store.json";
 
 // Get public blob URL
@@ -121,7 +121,10 @@ async function saveStore(store: any) {
     await put(`${BUCKET_NAME}/${FILE_NAME}`, Buffer.from(data), {
       access: "public",
       contentType: "application/json",
+      allowOverwrite: true,
     });
+    const fs = await import("fs/promises");
+    await fs.writeFile(LOCAL_FILE, data, "utf-8");
   } else {
     const fs = await import("fs/promises");
     await fs.writeFile(LOCAL_FILE, data, "utf-8");
