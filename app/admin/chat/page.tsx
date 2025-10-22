@@ -43,7 +43,11 @@ export default function ChatPage() {
   }, [messages]);
   useEffect(() => {
     const fetchHistory = async () => {
-      const res = await fetch("/api/admin/chat/store");
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      const res = await fetch("/api/admin/chat/store", config);
       const history = await res.json();
       setMessages(history.messages.map((m: { from: string; }) => ({
         ...m,

@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
-    
+
     fetchPembayaran();
 
     if (!token) {
@@ -67,15 +67,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [router]);
   useEffect(() => {
     const fetchunread = async () => {
-      const res = await fetch("/api/admin/chat/store");
-      const history = await res.json();
-      const unreadCountsArray = history.sessions.map((s: { unreadCount: any; }) => s.unreadCount);
-      console.log("Individual unread counts:", unreadCountsArray);
+      try {
+        const token = localStorage.getItem('token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        const res = await fetch("/api/admin/chat/store", config);
+        const history = await res.json();
+        const unreadCountsArray = history.sessions.map((s: { unreadCount: any; }) => s.unreadCount);
+        console.log("Individual unread counts:", unreadCountsArray);
 
-      const totalUnread = unreadCountsArray.reduce((acc: any, count: any) => acc + count, 0);
-      console.log("Total unread count:", totalUnread);
+        const totalUnread = unreadCountsArray.reduce((acc: any, count: any) => acc + count, 0);
+        console.log("Total unread count:", totalUnread);
 
-      setunread(totalUnread)
+        setunread(totalUnread)
+      } catch (error) {
+        console.error("failed load chat", error)
+      }
     }
     fetchunread();
   }, [router]);
@@ -161,7 +169,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       label: 'Komunikasi',
       icon: 'fa-solid fa-comments',
       children: [
-        { href: '/admin/chat', label: 'Chat WhatsApp', icon: 'fa-brands fa-whatsapp', badge:`${unread}`, badgeColor: 'bg-blue-500' },
+        { href: '/admin/chat', label: 'Chat WhatsApp', icon: 'fa-brands fa-whatsapp', badge: `${unread}`, badgeColor: 'bg-blue-500' },
       ]
     },
     {

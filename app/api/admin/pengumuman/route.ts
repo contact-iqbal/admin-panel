@@ -21,15 +21,15 @@ export async function GET(request: NextRequest) {
       SELECT
         u.id as user_id,
         u.email,
-        dd.nama_lengkap,
-        dd.nisn,
-        dd.asal_sekolah,
+        COALESCE(NULLIF(dd.nama_lengkap, ''), u.nama) AS nama_lengkap,
+        COALESCE(NULLIF(dd.nisn, ''), u.nisn) AS nisn,
+        COALESCE(NULLIF(dd.asal_sekolah, ''), 'Kosong') AS asal_sekolah,
         COALESCE(k.status, 'pending') as status_kelulusan,
         k.catatan
       FROM users u
       LEFT JOIN data_diri dd ON u.id = dd.user_id
       LEFT JOIN kelulusan k ON u.id = k.user_id
-      WHERE u.role = 'user'
+      WHERE u.role = 'default'
       ORDER BY dd.nama_lengkap ASC
     `);
 
@@ -79,8 +79,8 @@ export async function PUT(request: NextRequest) {
       );
     } else {
       await db.query(
-        `INSERT INTO kelulusan (user_id, status, catatan, created_at, updated_at)
-         VALUES (?, ?, ?, NOW(), NOW())`,
+        `INSERT INTO kelulusan (user_id, status, catatan, diumumkan_at, created_at, updated_at)
+         VALUES (?, ?, ?, NOW(), NOW(), NOW())`,
         [user_id, status, catatan || null]
       );
     }

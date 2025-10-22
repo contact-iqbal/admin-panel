@@ -50,7 +50,7 @@ export default function PengumumanPage() {
     }
   };
 
-  const handleUpdateStatus = async (userId: number, status: 'lulus' | 'tidak_lulus' | 'pending') => {
+  const handleUpdateStatus = async (userId: number, status: 'lulus' | 'tidak_lulus' | 'pending', catatan: String) => {
     const result = await Swal.fire({
       title: 'Update Status Kelulusan',
       html: `
@@ -62,7 +62,7 @@ export default function PengumumanPage() {
             <option value="tidak_lulus" ${status === 'tidak_lulus' ? 'selected' : ''}>Tidak Lulus</option>
           </select>
           <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (Opsional)</label>
-          <textarea id="catatan" class="w-full border border-gray-300 rounded-lg px-3 py-2" rows="3" placeholder="Tambahkan catatan..."></textarea>
+          <textarea id="catatan" class="w-full border border-gray-300 rounded-lg px-3 py-2" rows="3" placeholder="Tambahkan catatan...">${catatan || ""}</textarea>
         </div>
       `,
       showCancelButton: true,
@@ -128,9 +128,9 @@ export default function PengumumanPage() {
   const getFilteredPeserta = () => {
     return peserta.filter((p) => {
       const matchesSearch =
-        p.nama_lengkap.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.nisn?.toLowerCase().includes(searchTerm.toLowerCase());
+        (p.nama_lengkap?.toLowerCase().includes(searchTerm?.toLowerCase() || '') ||
+          p.email?.toLowerCase().includes(searchTerm?.toLowerCase() || '') ||
+          p.nisn?.toLowerCase().includes(searchTerm?.toLowerCase() || '')) || false;
       const matchesFilter = filterStatus === 'all' || p.status_kelulusan === filterStatus;
       return matchesSearch && matchesFilter;
     });
@@ -256,25 +256,25 @@ export default function PengumumanPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       No
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Nama Lengkap
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       NISN
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Email
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Asal Sekolah
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium break-words text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Aksi
                     </th>
                   </tr>
@@ -282,29 +282,29 @@ export default function PengumumanPage() {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {filteredPeserta.map((p, index) => (
                     <tr key={p.user_id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                      <td className="px-6 py-4  text-sm text-gray-900 dark:text-gray-300">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">{p.nama_lengkap}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                        {p.nisn || '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                        {p.email}
+                      <td className="px-6 py-4 ">
+                        <div className="text-sm font-medium break-words text-gray-900 dark:text-white">{p.nama_lengkap}</div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                        {p.nisn || '-'}
+                      </td>
+                      <td className="px-6 py-4 text-sm break-all text-gray-600 dark:text-gray-400">
+                        {p.email}
+                      </td>
+                      <td className="px-6 py-4 text-sm break-words text-gray-600 dark:text-gray-400">
                         {p.asal_sekolah || '-'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(p.status_kelulusan)}`}>
+                      <td className="px-6 py-4 ">
+                        <span className={`px-3 py-1 rounded-full whitespace-nowrap text-xs font-medium ${getStatusBadge(p.status_kelulusan)}`}>
                           {getStatusText(p.status_kelulusan)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-6 py-4 text-sm">
                         <button
-                          onClick={() => handleUpdateStatus(p.user_id, p.status_kelulusan)}
+                          onClick={() => handleUpdateStatus(p.user_id, p.status_kelulusan, p.catatan || "")}
                           className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                         >
                           <i className="fa-solid fa-edit mr-1"></i>

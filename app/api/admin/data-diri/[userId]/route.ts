@@ -64,6 +64,17 @@ export async function PATCH(
         userId,
       ]
     );
+    await pool.query<ResultSetHeader>(
+      `UPDATE users SET
+        nama = ?, nisn = ?, tanggal_lahir = ?
+      WHERE id = ?`,
+      [
+        nama_lengkap,
+        nisn,
+        dateOnly,
+        userId,
+      ]
+    );
 
     return NextResponse.json({ message: 'Data diri updated' }, { status: 200 });
   } catch (error) {

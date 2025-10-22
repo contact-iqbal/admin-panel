@@ -174,21 +174,21 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, nama_lengkap: e.target.value })
                   }
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="text"
                   placeholder="NISN"
                   value={formData.nisn || ''}
                   onChange={(e) => setFormData({ ...formData, nisn: e.target.value })}
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="text"
                   placeholder="NIK"
                   value={formData.nik || ''}
                   onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="text"
@@ -197,7 +197,7 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, tempat_lahir: e.target.value })
                   }
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="date"
@@ -205,14 +205,14 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, tanggal_lahir: e.target.value })
                   }
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white dark:scheme-dark"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white dark:scheme-dark"
                 />
                 <select
                   value={formData.jenis_kelamin || ''}
                   onChange={(e) =>
                     setFormData({ ...formData, jenis_kelamin: e.target.value })
                   }
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 >
                   <option value="">Pilih Jenis Kelamin</option>
                   <option value="Laki-laki">Laki-laki</option>
@@ -222,7 +222,7 @@ export default function UserDetailPage() {
                   placeholder="Alamat"
                   value={formData.alamat || ''}
                   onChange={(e) => setFormData({ ...formData, alamat: e.target.value })}
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                   rows={3}
                 />
                 <input
@@ -232,7 +232,7 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, asal_sekolah: e.target.value })
                   }
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 />
                 <input
                   type="number"
@@ -241,7 +241,7 @@ export default function UserDetailPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, tahun_lulus: e.target.value })
                   }
-                  className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border dark:border-gray-700 rounded dark:bg-gray-800 dark:text-white"
                 />
                 <button
                   onClick={handleSaveDataDiri}
@@ -296,7 +296,7 @@ export default function UserDetailPage() {
           {data.berkas.length > 0 ? (
             <div className="space-y-3">
               {data.berkas.map((berkas) => (
-                <div key={berkas.id} className="border rounded p-3">
+                <div key={berkas.id} className="border dark:border-gray-700 rounded p-3">
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <div className="font-semibold">{berkas.jenis_berkas}</div>
@@ -341,7 +341,7 @@ export default function UserDetailPage() {
           {data.pembayaran.length > 0 ? (
             <div className="space-y-3">
               {data.pembayaran.map((payment) => (
-                <div key={payment.id} className="border rounded p-3">
+                <div key={payment.id} className="border dark:border-gray-700 rounded p-3">
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="font-semibold">

@@ -133,6 +133,7 @@
 // }
 import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import { verifyToken } from "@/lib/auth";
 
 const BUCKET_NAME = "chat-storage";
 const FILE_NAME = "chat_store.json";
@@ -186,13 +187,13 @@ async function loadStore(): Promise<{ messages: any[]; sessions: any[] }> {
         const text = await res.text();
         store = JSON.parse(text);
       }
-    } catch {}
+    } catch { }
   } else {
     try {
       const fs = await import("fs/promises");
       const data = await fs.readFile(LOCAL_FILE, "utf-8");
       store = JSON.parse(data);
-    } catch {}
+    } catch { }
   }
 
   inMemoryStore = store;
@@ -261,7 +262,16 @@ export async function POST(req: NextRequest) {
 }
 
 // GET — retrieve store
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const token = request.headers.get('authorization')?.split(' ')[1];
+  if (!token) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
+  const decoded = verifyToken(token);
+  if (!decoded || decoded.role !== 'admin') {
+    return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
+  }
   const store = await loadStore();
   return NextResponse.json(store);
 }

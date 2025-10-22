@@ -203,20 +203,21 @@ export default function KelolaBerkas() {
                       </a>
                       {berkas.status === 'pending' && (
                         <>
-                          <button
-                            onClick={() => updateBerkasStatus(berkas.id, 'verified')}
-                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition"
-                          >
-                            Verifikasi
-                          </button>
-                          <button
-                            onClick={() => updateBerkasStatus(berkas.id, 'rejected')}
-                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition"
-                          >
-                            Tolak
-                          </button>
+
                         </>
                       )}
+                      <button
+                        onClick={() => updateBerkasStatus(berkas.id, 'verified')}
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition"
+                      >
+                        Verifikasi
+                      </button>
+                      <button
+                        onClick={() => updateBerkasStatus(berkas.id, 'rejected')}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition"
+                      >
+                        Tolak
+                      </button>
                     </div>
                   </td>
                 </tr>
