@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Admin SPMB Antartika",
   description: "Sistem Pendaftaran Peserta Didik Baru",
+  icons: "/favicon.png",
 };
 
 export default function RootLayout({

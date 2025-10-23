@@ -259,8 +259,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Brand Section */}
         <div className="bg-gray-800 border-b border-gray-700">
           <Link href="/admin" className="flex items-center px-4 py-3.5 mb-1 text-white no-underline hover:bg-gray-750">
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold mr-3">
-              A
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3">
+              {/* A */}
+              <img src="/NEXTEDU.png" alt="A" />
             </div>
             <span className="font-medium text-lg">SPMB Antartika</span>
           </Link>
