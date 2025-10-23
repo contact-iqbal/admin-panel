@@ -50,7 +50,7 @@ export default function PengumumanPage() {
     }
   };
 
-  const handleUpdateStatus = async (userId: number, status: 'lulus' | 'tidak_lulus' | 'pending', catatan: String) => {
+  const handleUpdateStatus = async (userId: number, status: 'lulus' | 'tidak_lulus' | 'pending', catatan: string) => {
     const result = await Swal.fire({
       title: 'Update Status Kelulusan',
       html: `
