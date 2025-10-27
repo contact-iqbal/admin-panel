@@ -6,6 +6,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 interface Jalur {
+  kuota: number;
   id: number;
   nama: string;
   deskripsi: string;
@@ -27,6 +28,7 @@ export default function KelolaJalur() {
     periode_selesai: '',
     biaya: '',
     status: 'active',
+    kuota: '',
   });
 
   useEffect(() => {
@@ -73,6 +75,7 @@ export default function KelolaJalur() {
         periode_selesai: '',
         biaya: '',
         status: 'active',
+        kuota: '',
       });
       await Swal.fire({
         icon: 'success',
@@ -101,6 +104,7 @@ export default function KelolaJalur() {
       periode_selesai: jalur.periode_selesai ? jalur.periode_selesai.split('T')[0] : '',
       biaya: jalur.biaya?.toString() || '',
       status: jalur.status,
+      kuota: jalur.kuota?.toString() || '',
     });
     setShowForm(true);
     window.location.href='#'
@@ -179,6 +183,7 @@ export default function KelolaJalur() {
                 periode_selesai: '',
                 biaya: '',
                 status: 'aktif',
+                kuota: '',
               });
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition font-medium w-full sm:w-auto"
@@ -243,6 +248,16 @@ export default function KelolaJalur() {
                   <option value="aktif">Aktif</option>
                   <option value="nonaktif">Tidak Aktif</option>
                 </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2 dark:text-gray-200">Kuota</label>
+                <input
+                  type="number"
+                  className="form-control dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                  value={formData.kuota}
+                  onChange={(e) => setFormData({ ...formData, kuota: e.target.value })}
+                  required
+                />
               </div>
             </div>
             <div>
@@ -320,6 +335,12 @@ export default function KelolaJalur() {
                         {jalur.periode_selesai
                           ? new Date(jalur.periode_selesai).toLocaleDateString('id-ID')
                           : '-'}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600 dark:text-gray-400">Kuota</span>
+                      <div className="font-medium dark:text-gray-200">
+                        {jalur.kuota}
                       </div>
                     </div>
                   </div>

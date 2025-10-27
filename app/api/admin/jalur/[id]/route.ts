@@ -19,11 +19,11 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { nama, deskripsi, periode_mulai, periode_selesai, biaya, status } = body;
+    const { nama, deskripsi, periode_mulai, periode_selesai, biaya, status, kuota } = body;
 
     await pool.query(
-      'UPDATE jalur SET nama = ?, deskripsi = ?, periode_mulai = ?, periode_selesai = ?, biaya = ?, status = ? WHERE id = ?',
-      [nama, deskripsi, periode_mulai, periode_selesai, biaya, status, id]
+      'UPDATE jalur SET nama = ?, deskripsi = ?, periode_mulai = ?, periode_selesai = ?, biaya = ?, status = ?, kuota = ? WHERE id = ?',
+      [nama, deskripsi, periode_mulai, periode_selesai, biaya, status, kuota, id]
     );
 
     return NextResponse.json({
