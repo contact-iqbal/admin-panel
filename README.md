@@ -192,3 +192,5 @@ This project utilizes the following technologies:
 *   Node.js
 *   Next.js
 *   MySQL
+
+[MIT License](https://github.com/contact-iqbal/admin-panel/blob/main/LICENSE) legal 2025
