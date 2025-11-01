@@ -182,7 +182,7 @@ Please ensure your code adheres to the project's coding standards and includes a
 
 ## License Information
 
-License information is not specified for this project. Please contact the owner to clarify the license under which the project is distributed.
+[MIT License](https://github.com/contact-iqbal/admin-panel/blob/main/LICENSE) legal 2025.
 
 ## Acknowledgments
 
@@ -193,4 +193,4 @@ This project utilizes the following technologies:
 *   Next.js
 *   MySQL
 
-[MIT License](https://github.com/contact-iqbal/admin-panel/blob/main/LICENSE) legal 2025
+
